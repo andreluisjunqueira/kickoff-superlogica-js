@@ -1,0 +1,112 @@
+<html>
+<head>
+	<title>Kick Off</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous">
+
+</head>
+<style>
+	.container{
+		width:500px;
+	}
+	legend{
+		text-align: center;
+	}
+</style>
+
+<script>
+	window.addEventListener('load', function(){
+
+        var request = function(metodo,url, params, callback){
+
+            var data = '';
+            for (var p in params){
+                data += p+'='+params[p]+'&';
+            }
+
+            var req = new XMLHttpRequest();
+            var metodo = metodo || "POST";
+            req.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200) {
+                    if(typeof callback == "function"){
+                        callback(this.response);
+                    }
+                }
+            };
+            req.open(metodo, url);
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.send( data );
+        }
+
+
+			var form = document.getElementById('form');
+            form.addEventListener('submit',function(evt){
+                evt.preventDefault();
+                var inputNome      = document.getElementById('nome');
+                var inputPreco     = document.getElementById('preco');
+                var inputDescricao = document.getElementById('descricao');
+                var inputCategoria = document.getElementById('categ');
+                
+                var produto = {};
+                produto.nome      = inputNome.value;
+                produto.preco     = inputPreco.value;
+                produto.descricao = inputDescricao.value;
+                produto.categoria = inputCategoria.value;
+                
+                request("POST","http://localhost/kickoffjs/novoproduto.php",produto,function(){
+                    inputNome.value  = "";
+                    inputPreco.value = "";
+                    inputDescricao.value = "";                    
+                });
+
+            },false)
+
+
+
+	},false);
+
+</script>
+
+<body>
+	<div class="container">
+		<form method="GET" id="form">
+			<fieldset>
+				<legend>Cadastro de produtos</legend>
+
+				<div class="form-group">
+					<label for="nome" class="col-lg-2 control-label">Nome produto :</label>
+			      <div class="col-lg-10">
+			        <input type="text" class="form-control" id="nome" placeholder="nome do produto" name="nomeproduto">
+			      </div>
+			    </div>
+
+	    		<div class="form-group">
+					<label for="preco" class="col-lg-2 control-label">Preço :</label>
+			      <div class="col-lg-10">
+			        <input type="text" class="form-control" id="preco" placeholder="Preço" name="precoproduto">
+			      </div>
+			    </div>
+
+    			<div class="form-group">
+					<label for="desc" class="col-lg-2 control-label">Descrição :</label>
+			      <div class="col-lg-10">
+			        <input type="text" class="form-control" id="desc" placeholder="Descrição" name="descricaoproduto">
+			      </div>
+			    </div>
+
+	    		<div class="form-group">
+					<label for="categ" class="col-lg-2 control-label">Categoria:</label>
+			      <div class="col-lg-10">
+					<select id="categ"  class="form-control" name="categoria">
+						<option value="cat1">Categoria 1</option>
+						<option value="cat2">Categoria 2</option>
+						<option value="cat3">Categoria 3</option>
+					</select>
+			      </div>
+			    </div>
+
+				<input type="submit" class="btn btn-primary btn-block" value="Cadastrar">
+			</fieldset>
+		</form>
+	</div>
+</body>
+</html>
